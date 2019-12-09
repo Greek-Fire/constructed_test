@@ -1,0 +1,35 @@
+---
+plugin: constructed
+strict: no
+cache: true
+compose:
+  # ensure our vars are lowercase
+  cmdb_region:       "region       | lower"
+  cmdb_data_center:  "data_center  | lower"
+  cmdb_environment:  "environment  | lower"
+  cmdb_owning_group: "owning_group | lower"
+  cmdb_baseline:     "baseline     | lower"
+groups:
+  baseline_default: "baseline is undefined"
+keyed_groups:
+  # add region to top-level group
+  - key:          'cmdb_region'
+    prefix:       'region'
+    parent_group: 'all'
+  
+  # add dc to region-level group
+  - key:          'cmdb_data_center'
+    prefix:       'dc'
+    parent_group: "region_{{ cmdb_region }}"
+
+  # add env to dc-level group
+  - key:          'cmdb_environment'
+    prefix:       "env"
+
+  # add owning group
+  - key:          'cmdb_owning_group'
+    prefix:       'og'
+
+  # add baseline group
+  - key:          'cmdb_baseline'
+    prefix:       'baseline'
